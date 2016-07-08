@@ -55,7 +55,7 @@ class ExpandCurlyBraces:
                 return result
             elif self.char == '\\' and self.next_char in '{,}\\':
                 if self.next_char in '{}':
-                    current += '\\'
+                    current += self.next_char
                 current += self.next_char
                 self.forward()
             else:
