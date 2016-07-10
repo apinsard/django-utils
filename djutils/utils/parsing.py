@@ -3,6 +3,9 @@ from itertools import product
 
 
 class ExpandCurlyBraces:
+    """Naive implementation of bash-like curly-brace expansion.
+    The input string is parsed from left to right character by character.
+    """
 
     def __init__(self, expr):
         self.expr = expr
@@ -77,5 +80,5 @@ class ExpandCurlyBraces:
 
 
 def expand_curly_braces(expr):
-
+    """Expand a string with curly braces to a list (bash-like)."""
     return ExpandCurlyBraces(expr)()
