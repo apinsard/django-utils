@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
+
 from djutils.utils.parsing import expand_curly_braces
 
 
