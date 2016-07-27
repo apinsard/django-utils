@@ -10,4 +10,4 @@
 /.sass-cache/
 /docs/_build/
 
-/db.sqlite3
+db.sqlite3
