@@ -30,7 +30,7 @@ def committable(func=None, default=False, only=None):
             if commit:
                 self.save(update_fields=only)
             return result
-
+        wrapper.alters_data = True
         return wrapper
 
     if func is None:
