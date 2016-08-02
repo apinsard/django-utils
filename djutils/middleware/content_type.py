@@ -6,8 +6,11 @@ from django.http import HttpResponse
 
 class BaseContentTypeMiddleware:
 
-    def process_request(self, request):
-        return None
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
 
     def bad_request(self, content=None, content_type=None):
         content = content or "Bad request"
@@ -24,7 +27,7 @@ class JsonMiddleware(BaseContentTypeMiddleware):
 
     content_type_re = re.compile(r'(application|text)/([a-z0-9_.-]+\+)?json')
 
-    def process_request(self, request):
+    def __call__(self, request):
         content_type = request.META['CONTENT_TYPE']
         if JsonMiddleware.content_type_re.match(content_type):
             try:
@@ -32,8 +35,7 @@ class JsonMiddleware(BaseContentTypeMiddleware):
             except ValueError:
                 return self.bad_request("Invalid JSON format")
             request.DATA = property(lambda s: s.JSON)
-            return None
-        return super().process_request(request)
+        return super().__call_(request)
 
 
 class XmlMiddleware(BaseContentTypeMiddleware):
@@ -47,7 +49,7 @@ class XmlMiddleware(BaseContentTypeMiddleware):
 
     content_type_re = re.compile(r'(application|text)/([a-z0-9_.-]+\+)?xml')
 
-    def process_request(self, request):
+    def __call__(self, request):
         import xmltodict  # import here to avoid import errors if the module is
                           # not installed and we don't need XmlMiddleware.
         content_type = request.META['CONTENT_TYPE']
@@ -57,8 +59,7 @@ class XmlMiddleware(BaseContentTypeMiddleware):
             except:
                 return self.bad_request("Invalid XML format")
             request.DATA = property(lambda s: s.XML)
-            return None
-        return super().process_request(request)
+        return super().__call__(request)
 
 
 class ContentTypeMiddleware(JsonMiddleware, XmlMiddleware):
